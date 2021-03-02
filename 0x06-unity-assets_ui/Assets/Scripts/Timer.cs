@@ -22,7 +22,7 @@ public class Timer : MonoBehaviour
     public void Win()
     {
         finalTime.text = timerText.text;
-        this.enabled = false;
+        timerText.gameObject.SetActive(false);
     }
 
     private void Update()

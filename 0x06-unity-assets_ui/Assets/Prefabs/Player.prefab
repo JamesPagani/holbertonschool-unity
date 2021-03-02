@@ -110,7 +110,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   moveSpeed: 7
-  jumpPower: 10
+  jumpPower: 5
 --- !u!54 &617392473931294075
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -140,3 +140,4 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   timerText: {fileID: 0}
+  finalTime: {fileID: 0}

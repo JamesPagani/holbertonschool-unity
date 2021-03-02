@@ -11,6 +11,7 @@ public class PlayerController : MonoBehaviour
     // The starting point.
     private Vector3 startingPoint = new Vector3(0, 1.25f, 0);
 
+    private bool grounded = true;
     // Initial Setup.
     void Start()
     {
@@ -33,7 +34,7 @@ public class PlayerController : MonoBehaviour
     }
 
     // Controlling the player's movement
-    void FixedUpdate()
+    private void FixedUpdate()
     {
         //X and Z movement
         Vector3 movement = Vector3.zero;
@@ -44,6 +45,12 @@ public class PlayerController : MonoBehaviour
         movement.z = walk;
 
         transform.Translate(movement);
+
+        if (Input.GetButton("Jump") && grounded)
+        {
+            Debug.Log("Tried to Jump");
+            player.AddForce(0, jumpPower, 0, ForceMode.Impulse);
+        }
     }
 
     // Reset the player if he falls of the game.
@@ -53,11 +60,18 @@ public class PlayerController : MonoBehaviour
         player.transform.rotation = Quaternion.Euler(0, 0, 0);
     }
 
-    //Mainly used for jumping
-    void OnCollisionStay(Collision collision)
+    private void OnCollisionEnter(Collision collision)
     {
-        if (collision.gameObject.tag == "Ground" && Input.GetButtonDown("Jump"))
-            player.AddForce(0, jumpPower, 0, ForceMode.Impulse);
+        if (collision.gameObject.tag == "Ground")
+        {
+            grounded = true;
+        }
     }
 
+    // Used to avoid mid-air jumping.
+    private void OnCollisionExit(Collision collision)
+    {
+        if (collision.gameObject.tag == "Ground")
+            grounded = false;
+    }
 }
