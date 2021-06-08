@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0, g: 0, b: 0, a: 1}
+  m_IndirectSpecularColor: {r: 0.47884, g: 0.8001845, b: 0.90072787, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -150,6 +150,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2fd53bf48cad251408916d44f3642497, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  masterMixer: {fileID: 24100000, guid: d6cf30dfdca063348be966dd3bbbf53b, type: 2}
 --- !u!4 &8512779
 Transform:
   m_ObjectHideFlags: 0
@@ -1411,6 +1412,12 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 220691808111958925, guid: f56421d23b9784249bd34a65a6d170e4,
+        type: 3}
+      propertyPath: OutputAudioMixerGroup
+      value: 
+      objectReference: {fileID: 2083623553903588678, guid: d6cf30dfdca063348be966dd3bbbf53b,
+        type: 2}
     - target: {fileID: 220691809162307148, guid: f56421d23b9784249bd34a65a6d170e4,
         type: 3}
       propertyPath: m_RootOrder
@@ -1476,6 +1483,12 @@ PrefabInstance:
       propertyPath: m_PlayOnAwake
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 2053319780420266074, guid: f56421d23b9784249bd34a65a6d170e4,
+        type: 3}
+      propertyPath: OutputAudioMixerGroup
+      value: 
+      objectReference: {fileID: 2083623553903588678, guid: d6cf30dfdca063348be966dd3bbbf53b,
+        type: 2}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: f56421d23b9784249bd34a65a6d170e4, type: 3}
 --- !u!1001 &2416342455769932937

@@ -1,10 +1,19 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Audio;
 using UnityEngine.SceneManagement;
 
 public class MainMenu : MonoBehaviour
 {
+    public AudioMixer masterMixer;
+
+    private void Start()
+    {
+        masterMixer.SetFloat("BGMVol", PlayerPrefs.GetFloat("bgmVolume", 0));
+        masterMixer.SetFloat("SFXVol", PlayerPrefs.GetFloat("sfxVolume", 0));
+    }
+
     /* Loads a level, based on the build settings.
      * INDEX:
      *  0: Main Menu.
@@ -19,6 +28,7 @@ public class MainMenu : MonoBehaviour
     // Loads the options.
     public void Options()
     {
+        PlayerPrefs.SetInt("prevScene", SceneManager.GetActiveScene().buildIndex);
         SceneManager.LoadScene("Options");
     }
 

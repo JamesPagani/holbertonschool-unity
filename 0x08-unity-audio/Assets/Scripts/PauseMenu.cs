@@ -2,27 +2,38 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.Audio;
 using UnityEngine.UI;
 
 public class PauseMenu : MonoBehaviour
 {
-    private bool paused;
+    // Is the game currently paused?
+    private bool _isPaused;
+    // Reference to the current scene.
     private Scene currentScene;
 
+    ///<summary>The pause menu interface.</summary>
     public Canvas pauseMenu;
+    ///<summary>Audio Mixer configuration when the game is paused.</summary>
+    public AudioMixerSnapshot paused;
 
+    ///<summary>Audio Mixer configuration when the game is not paused.</summary>
+    public AudioMixerSnapshot unpaused;
+
+    // Called at the start of the scene's lifespan.
     private void Start()
     {
-        paused = false;
+        _isPaused = false;
         currentScene = SceneManager.GetActiveScene();
     }
 
-    // Pauses the game.
+    ///<summary></summary>
     public void Pause()
     {
         Time.timeScale = 0;
-        paused = true;
+        _isPaused = true;
         pauseMenu.gameObject.SetActive(true);
+        paused.TransitionTo(.1f);
     }
 
     // Returns to the game
@@ -30,12 +41,14 @@ public class PauseMenu : MonoBehaviour
     {
         pauseMenu.gameObject.SetActive(false);
         Time.timeScale = 1;
-        paused = false;
+        _isPaused = false;
+        unpaused.TransitionTo(.1f);
     }
 
     // Restart the current scene
     public void Restart()
     {
+        unpaused.TransitionTo(.1f);
         SceneManager.LoadScene(currentScene.buildIndex);
         Resume();
     }
@@ -44,16 +57,19 @@ public class PauseMenu : MonoBehaviour
     public void MainMenu()
     {
         Time.timeScale = 1;
-        paused = false;
+        _isPaused = false;
+
         SceneManager.LoadScene("MainMenu");
+        unpaused.TransitionTo(.1f);
     }
 
     // Go to the options menu
     public void Options()
     {
         Time.timeScale = 1;
-        paused = false;
+        _isPaused = false;
         PlayerPrefs.SetInt("prevScene", currentScene.buildIndex);
+        unpaused.TransitionTo(.1f);
         SceneManager.LoadScene("Options");
     }
 
@@ -62,7 +78,7 @@ public class PauseMenu : MonoBehaviour
     {
         if (Input.GetKeyDown("escape"))
         {
-            if (!paused)
+            if (!_isPaused)
                 Pause();
             else
                 Resume();

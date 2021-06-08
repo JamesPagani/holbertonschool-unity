@@ -7,51 +7,57 @@ public class PlayerController : MonoBehaviour
     public float moveSpeed;
     public float jumpPower;
     public Animator tyAnimator;
+    public TyAudioController audioController;
+    public bool grounded = true;
+
+    [HideInInspector]public int terrain;
 
     private Rigidbody player;
     private Vector3 respawnPoint = new Vector3(0, 5.25f, 0);
-    private bool grounded = true;
     private Vector3 direction;
     private Vector3 movement;
     private Vector3 mouseRotation = Vector3.zero;
     private Vector3 lastGroundPosition;
     private Quaternion charRotation;
     private float fallDistance = 0f;
+    private CapsuleCollider playerCollision;
+    private LayerMask ground;
+    private AnimatorStateInfo currentAnimation;
+    private float animatioTime;
 
     // Initial Setup.
     void Start()
     {
         //Getting the player's Rigidbody
         player = GetComponent<Rigidbody>();
+        playerCollision = GetComponent<CapsuleCollider>();
+        ground = LayerMask.GetMask("Default");
     }
 
     void Update()
     {
+        currentAnimation = tyAnimator.GetCurrentAnimatorStateInfo(0);
+
         //Rotating
         if (Input.GetMouseButton(1))
-        {
             mouseRotation.y += Input.GetAxis("Mouse X");
-        }
 
         // Respawn if you fall from the platforms.
         if (player.transform.position.y <= -50)
-        {
             PlayerReset();
-        }
         if (Input.GetButtonDown("Jump") && grounded)
-        {
             Jump();
-        }
         tyAnimator.SetBool("inMidAir", !grounded);
         if (!grounded)
             fallDistance = lastGroundPosition.y - player.transform.position.y;
-        Debug.Log(fallDistance);
         tyAnimator.SetFloat("fallDistance", fallDistance);
     }
 
     // Controlling the player's movement
     private void FixedUpdate()
     {
+        grounded = Physics.CheckCapsule(playerCollision.bounds.center, new Vector3(playerCollision.bounds.center.x, playerCollision.bounds.min.y, playerCollision.bounds.center.z),
+            playerCollision.radius * 0.7f, ground);
         Move();
     }
 
@@ -79,6 +85,9 @@ public class PlayerController : MonoBehaviour
             tyAnimator.SetBool("isMoving", true);
         else
             tyAnimator.SetBool("isMoving", false);
+
+        currentAnimation = tyAnimator.GetCurrentAnimatorStateInfo(0);
+        animatioTime = currentAnimation.normalizedTime;
     }
 
     private void Jump()
@@ -95,23 +104,11 @@ public class PlayerController : MonoBehaviour
         mouseRotation = Vector3.zero;
     }
 
-    private void OnCollisionEnter(Collision collision)
+    private void OnCollisionStay(Collision collision)
     {
-        if (collision.gameObject.tag == "Ground")
-        {
-            grounded = true;
-            fallDistance = 0f;
-        }
-    }
-
-    // Used to avoid mid-air jumping.
-    private void OnCollisionExit(Collision collision)
-    {
-        if (collision.gameObject.tag == "Ground")
-        {
-            grounded = false;
-            lastGroundPosition = collision.gameObject.transform.position;
-        }
-
+        if (collision.gameObject.CompareTag("Grass"))
+            terrain = 0;
+        else
+            terrain = 1;
     }
 }
